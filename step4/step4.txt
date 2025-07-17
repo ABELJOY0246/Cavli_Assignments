@@ -1,0 +1,60 @@
+ 4: SMS Mode Simulation
+ ● Supported: AT+CMGF=1, AT+CMGS, AT+CMGR
+ ● Send and receive SMS from emulator UI
+ ➢ Assignment: Send test message, receive response, and record log
+
+This task simulates SMS functionality using CelerSMS AT Emulator. It focuses on configuring SMS format, sending SMS, and understanding message index referencing.
+
+1. AT+CMGF – Set SMS Message Format
+Used to choose SMS format:
+  0 = PDU mode (hexadecimal format)
+  1 = Text mode (readable format)
+Test command:
+  AT+CMGF=?
+Response:
+  +CMGF: (0,1) OK
+Read command:
+  AT+CMGF?
+Response:
+  +CMGF: 1 OK
+Write command:
+  AT+CMGF=1 → sets to text mode
+  AT+CMGF=0 → sets to PDU mode
+Response:
+  OK
+
+Note: Text mode must be set before using AT+CMGS or AT+CMGR.
+
+2. AT+CMGS – Send SMS Message
+Used to send SMS to a number.
+Syntax:
+AT+CMGS="phone_number"
+Then type the message, press Ctrl+Z to send.
+Example:
+  AT+CMGS="+919876543210"
+  Hello<Ctrl+Z
+Response (in CelerSMS):
+  +CMGS: 1
+   OK
+
+3. AT+CMGR – Read SMS Message
+Used to read a stored message from memory using its index.
+Syntax:
+  AT+CMGR=index
+Example:
+  AT+CMGR=1
+Actual Response (in CelerSMS):
+  ERROR
+Expected Response (on real hardware):
+    +CMGR: "REC READ","+919876543210","","24/07/25,12:34:56+22"
+    Hello
+    OK
+
+This command is not supported in CelerSMS since it does not simulate SMS storage.
+
+4. Understanding SMS Index
+Each SMS (sent or received) is stored at a memory location identified by an index number, starting from 1.
+AT+CMGS returns the index where the message was stored.
+AT+CMGR reads the message at a specific index.
+AT+CMGD deletes a message by index.
+AT+CMGL="ALL" lists all messages with their indexes.

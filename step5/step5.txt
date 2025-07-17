@@ -1,0 +1,77 @@
+ 5: PDP Context & Internet Setup
+ ● Not supported in CelerSMS AT Emulator (skip or mark theoretical)
+ ➢ Assignment: Research APN configuration with AT+CGDCONT on real modem
+
+
+1. AT+CGDCONT – Define PDP Context
+This is the main command to define how the module will connect to the internet.
+Syntax:
+    AT+CGDCONT=<cid>,"<PDP_type>","<APN>"
+Where:
+  <cid> is the context ID (usually 1)
+  <PDP_type> is usually "IP" or "IPV4V6"
+  <APN> is the Access Point Name provided by your mobile operator
+Example:
+  AT+CGDCONT=1,"IP","jionet"
+This command sets up PDP context 1 to use IP protocol and connects through the APN "jionet".
+To check what has been set:
+    AT+CGDCONT?
+Expected response:
+    +CGDCONT: 1,"IP","jionet",,0,0
+    OK
+
+It is showing ERROR in CelerSMS, because PDP configuration is not supported in the emulator.
+
+2. AT+CGATT – Attach or Detach from GPRS
+This command is used to attach or detach the module from the GPRS (internet) service.
+To attach:
+  AT+CGATT=1
+To detach:
+  AT+CGATT=0
+To check status:
+  AT+CGATT?
+Expected response:
+  +CGATT: 1 → means the module is attached to data service
+  +CGATT: 0 → not attached
+In CelerSMS, this usually returns +CGATT: 0 or ERROR because it cannot simulate network attachment.
+
+3. AT+CGACT – Activate PDP Context
+This command is used to turn on the actual data session.
+To activate PDP context 1:
+  AT+CGACT=1,1
+To deactivate it:
+  AT+CGACT=0,1
+To check current state:
+  AT+CGACT?
+Expected response:
+  +CGACT: 1,1 → context is active
+  +CGACT: 1,0 → context is not active
+
+Explanation of Terms in These Commands:
+
+PDP Type – This tells the modem what type of data protocol to use.
+Common values:
+"IP" → IPv4
+"IPV6" → IPv6
+"IPV4V6" → dual stack (both IPv4 and IPv6)
+
+APN (Access Point Name) – This is the gateway between the mobile network and the internet. Every SIM card provider has its own APN.
+Example values:
+
+Airtel: airtelgprs.com
+Jio: jionet
+BSNL: bsnlnet
+
+CID (Context ID) – A number that identifies each PDP context. Most setups use 1. You can have multiple PDP contexts in advanced use cases.
+Attach/Detach – "Attach" means the module registers itself to the data network. "Detach" means it disconnects. Without attaching, the module cannot activate PDP.
+Activate/Deactivate – Activation of the context allows the modem to start sending/receiving data using the defined APN and IP type.
+Behavior in CelerSMS Emulator:
+CelerSMS is only a simulation environment. It does not simulate:
+
+SIM card interaction with a real network, Actual internet data transmission, Real IP address assignment
+
+As a result:
+AT+CGDCONT may give ERROR
+AT+CGATT will always return 0 or ERROR
+AT+CGACT will not activate the context
+This is normal behavior for CelerSMS and does not indicate a mistake in command usage. The emulator is best used for understanding command syntax.

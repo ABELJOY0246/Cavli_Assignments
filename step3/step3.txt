@@ -1,0 +1,67 @@
+3: Command Variants & Help
+ ● Check: AT+CMD=?, AT+CMD?, AT+CMD=<val> where applicable
+ ➢ Assignment: Group 5 supported commands by syntax types
+ ● Document help-style output manually (emulator does not auto-list all commands)
+
+AT+CMD=? - TEST
+AT+CMD?  - READ
+AT+CMD=<val>  - WRITE
+Summary of Supported AT Commands in CelerSMS Emulator
+
+Commands That Worked (Tested and Functional):
+
+1.AT+CPIN
+Used to check SIM status and unlock it using a PIN or PUK code.
+Test command: AT+CPIN=? – returns supported formats if available.
+Read command: AT+CPIN? – shows current SIM status (e.g., READY, SIM PIN, SIM PUK).
+Write command: AT+CPIN="1234" – enters SIM PIN.
+AT+CPIN="12345678","0000" – enters PUK and new PIN if SIM is blocked.
+
+2.AT+CSQ
+Used to check signal strength (RSSI) and bit error rate (BER).
+Test command: AT+CSQ=? – returns supported range if emulator allows.
+Read command: AT+CSQ – returns current signal level and error rate in the format +CSQ: <rssi>,<ber>.
+Write command: Not applicable.
+
+3.AT+CREG
+Used to check and configure network registration status.
+Test command: AT+CREG=? – returns supported modes.
+Read command: AT+CREG? – returns current registration status.
+Write command: AT+CREG=1 – enables network registration unsolicited result code.
+
+4.AT+CMGF
+Used to set SMS message format to Text or PDU mode.
+Test command: AT+CMGF=? – returns supported values (0 for PDU, 1 for Text).
+Read command: AT+CMGF? – returns the current format.
+Write command: AT+CMGF=1 – sets the SMS format to Text mode.
+
+5.AT+CMEE – Enable or Disable Extended Error Reporting
+Used to control how errors are reported. It allows displaying numeric error codes or disabling detailed errors altogether.
+Test command:
+  AT+CMEE=?
+  Shows the supported options for error reporting.
+  Example response:
+  +CMEE: (0,1,2)
+  OK
+Read command:
+  AT+CMEE?
+  Displays the current setting of CMEE.
+  Example response:
+  +CMEE: 2
+  OK
+Write command:
+  AT+CMEE=0 – Disables detailed error messages. Only "ERROR" will be shown.
+  AT+CMEE=1 – Enables human-readable error text.
+  AT+CMEE=2 – Enables numeric error codes (recommended for debugging).
+
+  Example usage: 
+  AT+CMEE=2
+  OK
+
+  AT+CMGS="12345"
+  +CME ERROR: 10
+
+The value 10 is a numeric code indicating a specific cause of failure (e.g., SIM not inserted, incorrect format, etc.).
+
+AT+CMEE is not supported in celersms it is showing error.
+And there are many other syntaxes which has test read write facilities but is not supported in celersms.

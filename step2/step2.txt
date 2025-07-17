@@ -1,0 +1,143 @@
+ 2: Syntax & Status Commands
+ ● Supported: AT+CSQ, AT+CPIN?, AT+COPS?
+ ● Test signal quality, SIM status, and network operator info
+ ➢ Assignment: Extract numeric response (e.g., RSSI) manually or via script
+
+1. AT+CSQ
+Command: AT+CSQ
+Purpose: Check signal strength (RSSI) and bit error rate (BER)
+Expected Response:
+  +CSQ: <rssi>,<ber>
+  OK
+Actual Response:
+  +CSQ: 21,0
+  OK
+Interpretation:
+RSSI = 21 → Good signal (~ -61 dBm to -69 dBm).The RSSI value returned by the AT+CSQ command is given in a numeric index from 0 to 31, not directly in dBm. We have to convert it into dBm. Lower dBm (more negative) = weaker signal, Higher RSSI value = stronger signal.
+BER = 0 → No bit errors, connection quality is strong
+
+2. AT+CPIN?
+Command: AT+CPIN?
+Purpose: Check SIM card status
+Expected Response:
+   +CPIN: READY
+   OK
+Actual Response:
+   +CPIN: "READY"
+   OK
+Interpretation:
+SIM is inserted and ready
+
+3. AT+COPS?
+Command: AT+COPS?
+Purpose: Check the current network operator selection
+Expected Response (Real Hardware):
+    +COPS: 0,0,"NetworkName",<access_technology>
+    OK
+Actual Response (Emulator):
+    ERROR
+Reason for ERROR:
+The emulator doesn’t simulate real-time operator selection or network registration. AT+COPS? requires actual cellular network data, which the emulator cannot generate without hardware or network simulation. Some emulators leave it unsupported or trigger ERROR by default.
+
+
+Extra information about COPS? :
+
+Expected Response Format:
++COPS: <mode>,<format>,<operator>,<access_tech>
+OK
+
+Explanation of Each Field:
+
+1. <mode> – Operator Selection Mode
+Value | Description
+------|--------------------------
+0     | Automatic mode
+1     | Manual mode
+2     | Deregister from network
+3     | Set only format (no selection)
+4     | Manual then automatic
+
+2. <format> – Operator Name Format
+Value | Description
+------|--------------------------------
+0     | Long alphanumeric format (e.g., "Jio")
+1     | Short alphanumeric format
+2     | Numeric format (e.g., "40410")
+
+3. <operator> – Operator Identifier
+Depends on the format:
+- If format = 0 → Operator name (e.g., "Jio")
+- If format = 2 → Numeric code (e.g., 40410 = MCC 404 (India), MNC 10)
+
+4. <access_tech> – Radio Technology
+Value | Technology
+------|--------------------------
+0     | GSM
+1     | Compact GSM
+2     | UTRAN (3G)
+3     | GSM w/EGPRS (EDGE)
+4     | UTRAN w/HSDPA
+5     | UTRAN w/HSUPA
+6     | UTRAN w/HSDPA and HSUPA
+7     | LTE (4G)
+9     | Cat-M (LTE-M)
+10    | NB-IoT
+
+Example Response:
++COPS: 0,0,"Jio",7
+OK
+
+This means:
+- Mode 0: Automatic network selection
+- Format 0: Operator name (long format)
+- Operator: "Jio"
+- Access Technology: LTE (value 7)
+
+Extra information about AT+CPIN? :
+
+Command:
+AT+CPIN?
+
+Typical Response:
++CPIN: <status>
+OK
+
+Possible <status> Variants and Their Meaning:
+
+1. READY
+   - SIM is inserted and fully functional.
+
+2. SIM PIN
+   - SIM requires a 4-digit PIN to unlock.
+   - Unlock using: AT+CPIN="1234"
+
+3. SIM PUK
+   - SIM is locked due to too many wrong PIN attempts.
+   - Requires 8-digit PUK and new PIN.
+   - Unlock using: AT+CPIN="PUK","newpin"
+
+4. PH-SIM PIN
+   - Phone-level SIM lock is active.
+   - Requires device PIN to access SIM.
+
+5. PH-FSIM PIN
+   - Facility-specific SIM PIN (rare).
+
+6. PH-FSIM PUK
+   - Facility-specific SIM PUK (rare).
+
+7. SIM NOT INSERTED
+   - SIM is not detected or inserted improperly.
+
+8. SIM PIN2
+   - Second-level PIN required (e.g., for fixed dialing features).
+
+9. SIM PUK2
+   - PUK2 needed if SIM PIN2 is blocked.
+
+10. NOT READY
+    - SIM initialization is incomplete or pending.
+
+11. ERROR
+    - Invalid response, no modem/SIM access, or command not supported.
+ 

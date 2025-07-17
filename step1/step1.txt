@@ -1,0 +1,37 @@
+ 1: Setup & Fundamentals
+ ● Install https://www.celersms.com/at-emulator.htm
+ ● Explore AT command layout in emulator UI
+ ● Test: AT, ATI, ATZ
+ ➢ Assignment: Document responses and screenshots of each command
+
+Successfully installed celersms AT emulator
+
+AT Command Tests
+1.AT
+Command: AT
+Purpose: Basic communication check with the modem
+Expected Response: OK
+Actual Response: OK
+Explanation: Confirms the modem is connected and responsive.
+
+2.ATI
+Command: ATI
+Purpose: Display modem/manufacturer information
+Expected Response:
+   Manufacturer: <Name>  
+   Model: <Model>  
+   Revision: <Firmware Version>  
+   OK
+Actual Response:
+   C102
+   OK
+Explanation: C102 is a simulated model name or firmware ID used by the CelerSMS emulator to mimic how a real modem responds to ATI. It doesn't refer to a specific GSM/LTE module.
+
+3.ATZ
+Command: ATZ
+Purpose: Soft reset the modem (restore default settings)
+Expected Response: OK
+Actual Response: OK
+Explanation: Resets the modem to default configuration without turning it off.
+
+The emulator is properly installed and responding to basic AT commands, confirming a successful Day 1 setup. This forms the foundation for exploring more advanced AT commands in upcoming sessions.
