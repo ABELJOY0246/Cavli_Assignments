@@ -1,0 +1,55 @@
+ 8: Custom AT Commands
+ ● CelerSMS supports limited standard GSM commands only
+ ➢ Assignment: Research any suitable Cavli product and Propose 3 custom AT commands and 
+mock expected responses manually
+
+Custom AT commands are special, manufacturer-defined instructions.
+They are used to:
+Control extra hardware features.
+Trigger firmware updates.
+Combine multiple actions into one command.
+Access module-specific functions.
+
+
+
+Module Used: Cavli C1-RM (NB-IoT/EGPRS)
+
+1. AT+NVSETRRCRLSTIMER10
+Purpose: Set the RRC release timer for low power mode optimization. Helps manage how quickly the device returns to idle after data transmission.
+Syntax: AT+NVSETRRCRLSTIMER10=<value>
+Example:
+  AT+NVSETRRCRLSTIMER10=1
+Expected Response:
+  OK
+Details:
+- <value> can be from 0 to 15 (representing different timeout durations).
+- Useful for reducing power consumption in NB-IoT mode.
+
+
+
+2. AT+CGAPNRC
+Purpose:Configure the APN with extended parameters specific to Cavli's NB-IoT implementation.
+Syntax:AT+CGAPNRC=<cid>,"<APN>","<username>","<password>"
+Example:
+  AT+CGAPNRC=1,"internet.cavli","user","pass"
+Expected Response:
+  OK
+Details:
+- Enhances the basic AT+CGDCONT command by including authentication fields.
+- Ensures reliable APN provisioning for remote deployment.
+
+
+3. AT+NIPDATA
+Purpose:Send raw data in Non-IP mode (used in NB-IoT for reduced overhead).
+Syntax:AT+NIPDATA=<length>,<data>
+Example:
+  AT+NIPDATA=4,"A1B2"
+Expected Response:
+  OK
+Details:
+- Bypasses TCP/IP layer for minimal packet size.
+- Useful in low-power, low-bandwidth applications (e.g., metering, telemetry).
+
+
+
+

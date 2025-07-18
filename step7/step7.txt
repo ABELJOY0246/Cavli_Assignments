@@ -1,0 +1,87 @@
+Assignment 7: Error Simulation & Debugging
+
+Note:
+The CelerSMS AT Emulator has very limited support for error simulation and does NOT support the AT+CMEE command or detailed error messages. Therefore, most of this assignment will be theoretical or based on what would happen on real hardware like Cavli C10GS or C42QM.
+
+--------------------------------------------------------
+Objective:
+To understand how to simulate and interpret AT command errors. In real modules, AT+CMEE enables detailed error responses which help during debugging. In CelerSMS, you can try unsupported or incorrect commands to see simple “ERROR” responses.
+
+It's not working in celersms.So here it will be theoretical explanation of how to do it.
+
+1. AT+CMEE — (NOT SUPPORTED in CelerSMS)
+
+Expected Syntax:
+       AT+CMEE=<mode>
+
+- 0 = Disable (returns just “ERROR”)
+- 1 = Enable numeric errors (e.g., CME ERROR: 10)
+- 2 = Enable verbose errors (e.g., SIM not inserted)
+
+But in CelerSMS:
+Typing `AT+CMEE=2` returns:
+ERROR
+So, error codes and descriptions cannot be viewed in this emulator.
+
+2. Testing Basic Errors in CelerSMS
+
+Try these in the emulator:
+
+a) Typing invalid command
+Example:
+AT+XYZ
+Response:
+→ ERROR
+(This shows the emulator doesn’t recognize the command)
+
+b) Incomplete/incorrect command syntax
+Example:
+AT+CMGF
+Response:
+→ ERROR
+(Should be AT+CMGF=1 or AT+CMGF=0)
+
+c) Unsupported valid command
+Example:
+AT+CGDCONT=1,"IP","internet"
+Response:
+→ ERROR
+(This shows the emulator does not support PDP context)
+
+d) SMS Read error (if no message exists)
+Example:
+AT+CMGR=1
+Response:
+→ ERROR or empty response (depends on simulator state)
+
+
+3. What Happens on a Real Modem
+
+If using a real Cavli module:
+You can enable detailed errors using:
+AT+CMEE=2
+
+Then when an error occurs, you get:
++CME ERROR: <code> → which helps identify the issue
+
+Example:
+AT+CMGS (without setting CMGF)
+Response:
++CME ERROR: 303  → Operation not allowed
+
+
+4. Error Code Reference (Theoretical)
+
+Common +CME ERROR codes:
+10 → SIM not inserted  
+13 → SIM failure  
+21 → Invalid index  
+30 → No network service  
+50 → Incorrect parameters  
+100 → Unknown error  
+515 → Unrecognized access string  
+
+These codes only appear if CMEE=1 or CMEE=2 is supported, which is not the case in CelerSMS.
+
+
+

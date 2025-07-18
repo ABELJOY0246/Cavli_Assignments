@@ -1,0 +1,103 @@
+ 6: Socket Communication
+ ● Not applicable in CelerSMS Emulator (limited to GSM SMS AT commands)
+ ➢ Assignment: Research AT+QIOPEN/AT+QISEND for any TCP modules of Cavli and create a 
+presentation
+
+
+
+The CelerSMS AT Emulator does not support socket communication commands such as AT+QIOPEN or AT+QISEND. It is limited to GSM SMS-based commands only. Hence, this assignment requires a theoretical understanding and research on socket communication using Cavli modules (e.g., C10GS, C42QM).
+
+Socket communication enables a device (like a cellular module) to connect to a server over the internet using TCP (Transmission Control Protocol) or UDP (User Datagram Protocol). It is essential for IoT devices that need to send/receive data over cellular networks.
+
+Common Use Case:
+- Connecting to a remote server (e.g., an MQTT broker, HTTP server)
+- Sending sensor data
+- Receiving commands from a cloud service
+
+Basic Steps for TCP Socket Communication Using AT Commands:
+
+1. Configure the PDP context to enable IP access.
+2. Open a socket connection using AT+QIOPEN.
+3. Send data using AT+QISEND.
+4. Optionally receive data (if supported).
+5. Close the connection using AT+QICLOSE.
+
+1. AT+CGDCONT — Define PDP Context (APN settings)
+
+Syntax:
+AT+CGDCONT=<cid>,"<PDP_type>","<APN>"
+
+Explanation:
+- <cid>: PDP context ID (usually 1)
+- <PDP_type>: Usually "IP"
+- <APN>: Access Point Name provided by SIM/network operator
+
+Example:
+AT+CGDCONT=1,"IP","internet"
+
+2. AT+QIOPEN — Open TCP/UDP Socket
+
+Syntax:
+AT+QIOPEN=<ctxid>,<connectID>,"<service_type>","<ip_address>",<port>,<local_port>,<access_mode>
+
+Explanation:
+- <ctxid>: PDP context ID (1 if using AT+CGDCONT=1)
+- <connectID>: Unique ID for the socket (0 to n)
+- <service_type>: "TCP" or "UDP"
+- <ip_address>: Remote server IP
+- <port>: Remote server port number
+- <local_port>: Usually 0 (auto-assigned)
+- <access_mode>: 0 for buffer mode, 1 for direct push, etc.
+
+Example:
+AT+QIOPEN=1,0,"TCP","142.250.196.78",80,0,0
+
+Expected Response:
+OK
++QIOPEN: 0,0  --> 0 = success; error code if failure
+
+
+3. AT+QISEND — Send Data Over Open Socket
+
+Syntax:
+AT+QISEND=<connectID>,<length>
+
+Explanation:
+- <connectID>: ID used in QIOPEN (e.g., 0)
+- <length>: Number of bytes to send
+
+After issuing the command, the modem will return a ">" prompt. Type the data and press CTRL+Z or send the data via serial.
+
+Example:
+AT+QISEND=0,18
+> Hello from Abel
+
+Expected Response:
+SEND OK
+
+
+4. AT+QICLOSE — Close the Socket
+
+Syntax:
+AT+QICLOSE=<connectID>
+
+Explanation:
+- <connectID>: Socket ID to be closed
+
+Example:
+AT+QICLOSE=0
+
+Expected Response:
+OK
+
+Sample Communication Flow:
+
+AT+CGDCONT=1,"IP","internet"
+AT+QIOPEN=1,0,"TCP","142.250.196.78",80,0,0
+// Wait for: +QIOPEN: 0,0
+AT+QISEND=0,18
+> Hello from Abel
+// Wait for: SEND OK
+AT+QICLOSE=0
+
+So we require a real modem to understand the work flow.
